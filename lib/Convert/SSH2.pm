@@ -79,6 +79,14 @@ This format looks like
   ...
   -----END RSA PUBLIC KEY-----
 
+=item * x509
+
+This format looks like
+
+  -----BEGIN PUBLIC KEY-----
+  ...
+  -----END PUBLIC KEY-----
+
 =back
 
 You can add your own format by implementing a L<Convert::SSH2::Format::Base> module.
@@ -94,6 +102,7 @@ has 'format' => (
         confess "$n is not a supported format." unless 
             grep { $n eq $_ } qw(
                 pkcs1
+                x509
             );
     },
     default => sub { 'pkcs1' },

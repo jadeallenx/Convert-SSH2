@@ -2,11 +2,13 @@ Build.PL
 Changes
 lib/Convert/SSH2.pm
 lib/Convert/SSH2/Format/Base.pm
+lib/Convert/SSH2/Format/X509.pm
 lib/Convert/SSH2/Format/PKCS1.pm
 MANIFEST			This list of files
 MANIFEST.SKIP			
 README
 t/00-load.t
 t/01-pkcs1.t
+t/02-x509.t
 t/manifest.t
 t/pod.t
