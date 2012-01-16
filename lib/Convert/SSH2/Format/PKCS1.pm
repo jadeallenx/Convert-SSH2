@@ -1,5 +1,7 @@
 package Convert::SSH2::Format::PKCS1;
 
+our $VERSION = '0.01';
+
 use Moo;
 extends 'Convert::SSH2::Format::Base';
 
@@ -24,7 +26,7 @@ when needed.
 
 =item asn
 
-Holds ASN converter. Defaults to L<Convert::ASN1>.
+Holds an ASN converter. Defaults to L<Convert::ASN1>.
 
 =back
 
@@ -64,20 +66,6 @@ _EOT
     },
 );
 
-=over
-
-=item line_width
-
-How many Base64 characters should make a line. Defaults to 64
-
-=back
-
-=cut
-
-has 'line_width' => (
-    is => 'ro',
-    default => sub { 64 },
-);
 
 =head1 METHOD
 
@@ -96,19 +84,16 @@ sub generate {
 
     $self->asn->prepare($self->asn_template) or confess;
 
-    my $pdu = $self->encode(
+    my $pdu = $self->asn->encode(
                    modulus => $self->n,
             publicExponent => $self->e,
     ) or confess;
 
-    my $b64 = base64_encode($pdu, "");
+    my $b64 = encode_base64($pdu, "");
 
     my $out = "-----BEGIN RSA PUBLIC KEY-----\n";
-    $pos = 0;
-    while ( substr($b64, $pos, $self->line_width) ) {
-        $out .= $_ . "\n";
-    }
-    $out .= "-----END RSA PUBLIC KEY-----\n";
+      $out .= $self->format_lines($b64);
+      $out .= "-----END RSA PUBLIC KEY-----\n";
 
     return $out;
 }

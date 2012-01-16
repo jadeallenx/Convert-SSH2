@@ -19,6 +19,7 @@ my $builder = Module::Build->new(
         'Class::Load' => '0.13',
         'File::Slurp' => 0,
         'Moo' => '0.009013',
+        'Math::BigInt' => 0P,
     },
     add_to_cleanup      => [ 'Convert-SSH2-*' ],
     create_makefile_pl => 'traditional',

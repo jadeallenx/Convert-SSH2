@@ -10,6 +10,7 @@ use File::Slurp qw(read_file write_file);
 use Carp qw(confess);
 use Try::Tiny;
 use Class::Load qw(load_class);
+use Math::BigInt try => 'GMP';
 
 =head1 NAME
 
@@ -66,7 +67,7 @@ has 'key' => (
 
 =item format
 
-Required. Read-only. The output format. Current supports:
+Read-only. The output format. Current supports:
 
 =over
 
@@ -95,7 +96,6 @@ has 'format' => (
                 pkcs1
             );
     },
-    required => 1,
     default => sub { 'pkcs1' },
 );
 
@@ -120,6 +120,18 @@ has '_n' => (
 
 Generally, errors are fatal.  Use L<Try::Tiny> if you want more graceful error handling.
 
+=over
+
+=item new()
+
+Constructor. Takes any of the attributes as arguments.  You may optionally call new
+with either a buffer or a path, and the class will assume that it is the C<key>
+material.
+
+The object automatically attempts to parse C<key> data after instantiation.
+
+=back
+
 =cut 
 
 # Support single caller argument
@@ -138,8 +150,13 @@ sub BUILD {
     my $self = shift;
 
     my $buf;
-    if ( -e $self->key ) {
-        $buf = read_file($self->key, { binmode => ':raw' });
+    unless ( $self->key =~ /\n/ ) {
+        if ( -e $self->key ) {
+            $buf = read_file($self->key, { binmode => ':raw' });
+        }
+        else {
+            $buf = $self->key;
+        }
     }
     else {
         $buf = $self->key;
@@ -160,7 +177,7 @@ data inside of it into three components: the id string ('ssh-rsa'), the public e
 and the modulus ('n'). By default it looks for the Base64 data inside the instantiated object, 
 but you can optionally pass in a Base64 string.
 
-It uses L<Math::BigInt::GMP> to hold large integers such as 'n' or 'e'. If you don't have 
+It uses L<Math::BigInt> to hold large integers such as 'n' or 'e'. If you don't have 
 C<libgmp> installed, it will fall back to pure perl automatically, but there will be a speed 
 penalty.
 
@@ -199,11 +216,10 @@ sub parse {
         $e = hex( unpack "H*", $parts[1] );
     }
     else {
-        require Math::BigInt::GMP;
-        $e = Math::BigInt::GMP->new( ("0x" . unpack "H*", $parts[1]) );
+        $e = Math::BigInt->new( ("0x" . unpack "H*", $parts[1]) );
     }
 
-    my $n = Math::BigInt::GMP->new( ("0x" . unpack "H*", $parts[2]) );
+    my $n = Math::BigInt->new( ("0x" . unpack "H*", $parts[2]) );
 
     $self->_e( $e );
     $self->_n( $n );
@@ -217,7 +233,7 @@ sub parse {
 
 Using a subclass of L<Convert::SSH2::Format::Base>, generate a representation of the SSH2 key.
 
-Returns a formatted string
+Returns a formatted string.
 
 =back
 
@@ -252,7 +268,8 @@ sub format_output {
 
 Convenience method to write a formatted key representation to a file.
 
-Expects a pathname. 
+Expects a pathname.  Automatically calls C<format_output()> if necessary.
+If the output format has been generated already, it uses a cached version.
 
 Returns a true value on success.
 
@@ -263,6 +280,8 @@ Returns a true value on success.
 sub write {
     my $self = shift;
     my $path = shift;
+
+    confess "I don't have a path" unless $path;
 
     if ( -e $path ) {
         confess "$path seems to exist already?";
@@ -315,9 +334,15 @@ L<https://github.com/mrallen1/Convert-SSH2>
 
 =back
 
-=head1 ACKNOWLEDGEMENTS
+=head1 SEE ALSO
+
+L<Convert::SSH2::Format::Base>, L<Convert::SSH2::Format::PKCS1>
 
 L<Converting OpenSSH public keys|http://blog.oddbit.com/2011/05/converting-openssh-public-keys.html>
+
+=head1 ACKNOWLEDGEMENTS
+
+Mark Cavage
 
 =head1 LICENSE AND COPYRIGHT
 
