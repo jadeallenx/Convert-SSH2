@@ -25,7 +25,7 @@ use Convert::SSH2;
 
 my $c1 = Convert::SSH2->new(
            key => $ssh_key,
-        format => 'x509',
+        format => 'pkcs8',
 );
 
 isa_ok($c1, 'Convert::SSH2', 'object with buf constructed');
@@ -71,7 +71,7 @@ $tmp->close;
 
 my $c2 = Convert::SSH2->new(
         key => $tmp->filename,
-        format => 'x509',
+        format => 'pkcs8',
 );
 
 isa_ok($c2, 'Convert::SSH2', 'object with file constructed');

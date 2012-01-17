@@ -1,4 +1,4 @@
-package Convert::SSH2::Format::X509;
+package Convert::SSH2::Format::PKCS8;
 
 our $VERSION = '0.01';
 
@@ -11,11 +11,11 @@ use Convert::ASN1;
 
 =head1 NAME
 
-Convert::SSH2::Format::X509 - Format SSH key data as X509
+Convert::SSH2::Format::PKCS8 - Format SSH key data as PKCS8
 
 =head1 PURPOSE
 
-This module formats SSH2 RSA public keys as X509 strings.
+This module formats SSH2 RSA public keys as PKCS8 strings.
 
 These look like
  
@@ -89,7 +89,7 @@ _EOT
 
 =item generate()
 
-Returns a X509 formatted string, given C<n> and C<e>.
+Returns a PKCS8 formatted string, given C<n> and C<e>.
 
 =back
 

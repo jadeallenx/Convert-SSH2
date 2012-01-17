@@ -79,7 +79,7 @@ This format looks like
   ...
   -----END RSA PUBLIC KEY-----
 
-=item * x509
+=item * pkcs8
 
 This format looks like
 
@@ -102,7 +102,7 @@ has 'format' => (
         confess "$n is not a supported format." unless 
             grep { $n eq $_ } qw(
                 pkcs1
-                x509
+                pkcs8
             );
     },
     default => sub { 'pkcs1' },
