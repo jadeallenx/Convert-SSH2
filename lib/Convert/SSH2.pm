@@ -345,7 +345,7 @@ L<https://github.com/mrallen1/Convert-SSH2>
 
 =head1 SEE ALSO
 
-L<Convert::SSH2::Format::Base>, L<Convert::SSH2::Format::PKCS1>
+L<Convert::SSH2::Format::Base>, L<Convert::SSH2::Format::PKCS1>, L<Convert::SSH2::Format::PKCS8>
 
 L<Converting OpenSSH public keys|http://blog.oddbit.com/2011/05/converting-openssh-public-keys.html>
 
