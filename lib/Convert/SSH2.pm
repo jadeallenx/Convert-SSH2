@@ -67,7 +67,7 @@ has 'key' => (
 
 =item format
 
-Read-only. The output format. Current supports:
+Read-only. The output format. Currently supports:
 
 =over
 
