@@ -2,8 +2,9 @@ Convert-SSH2
 
 Version: 0.01
 
-This library converts an SSH2 style RSA public key to other representations like PKCS#1 which
-would be suitable for use with Crypt::RSA or other RSA library implementations.
+This library converts an SSH2 style RSA public key to other 
+representations like PKCS#1 or PKCS#8 which would be suitable 
+for use with Crypt::RSA or other RSA library implementations.
 
 INSTALLATION
 
