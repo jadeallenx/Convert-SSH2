@@ -12,3 +12,6 @@ t/01-pkcs1.t
 t/02-pkcs8.t
 t/manifest.t
 t/pod.t
+Makefile.PL
+META.yml
+META.json
